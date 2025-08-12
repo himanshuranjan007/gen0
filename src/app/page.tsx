@@ -1,9 +1,14 @@
 import { Button } from "@/components/ui/button"
-export default function Home() {
+import prisma from "@/lib/db"
+export default async function Home() {
+
+  const users = await prisma.post.findMany()
+
   return (
-<div>
-  Hello guys <Button variant="link">Click me</Button>
-</div>    
+    <div>
+      <Button variant="link">Click me</Button>
+      <div>{JSON.stringify(users)} </div>
+    </div>
   );
 }
 

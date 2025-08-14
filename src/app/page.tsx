@@ -1,8 +1,13 @@
 import { Button } from "@/components/ui/button"
 import prisma from "@/lib/db"
+import { useTRPC } from "@/trpc/client"
 export default async function Home() {
 
-  const users = await prisma.post.findMany()
+  const users = await prisma.post.findUnique({
+    where: {
+      id: 1
+    }
+  })
 
   return (
     <div>
@@ -11,4 +16,3 @@ export default async function Home() {
     </div>
   );
 }
-

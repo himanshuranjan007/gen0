@@ -1,18 +1,28 @@
+"use client"
 import { Button } from "@/components/ui/button"
 import prisma from "@/lib/db"
 import { useTRPC } from "@/trpc/client"
-export default async function Home() {
+import { useQuery } from "@tanstack/react-query"
 
-  const users = await prisma.post.findUnique({
-    where: {
-      id: 1
-    }
-  })
+
+
+
+export default function Home() {
+  const trpc =useTRPC();
+  
+  const {data} = useQuery(trpc.hello.queryOptions({text:"antonio"}))
+
+
+  // console.log(data)
+
+  
+
 
   return (
     <div>
-      <Button variant="link">Click me</Button>
-      <div>{JSON.stringify(users)} </div>
-    </div>
+      {JSON.stringify(data)}
+      {/* <div>hello world</div> */}
+
+    </div>  
   );
 }

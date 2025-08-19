@@ -1,28 +1,33 @@
-"use client"
+
 import { Button } from "@/components/ui/button"
 import prisma from "@/lib/db"
 import { useTRPC } from "@/trpc/client"
-import { useQuery } from "@tanstack/react-query"
+import { dehydrate, HydrationBoundary, useQuery } from "@tanstack/react-query"
 
 
+import { caller ,trpc} from "@/trpc/server"
+import {getQueryClient} from "@/trpc/server"
+import { Client } from "./client"
+import { Suspense } from "react"
+
+export default async function Home() {
+
+  const queryClient=getQueryClient();
+  void queryClient.prefetchQuery(trpc.hello.queryOptions({text:"antonio prefetch"}))  //prefetch query
+
+  const data= await caller.hello({text:"antonio"})
+ 
 
 
-export default function Home() {
-  const trpc =useTRPC();
-  
-  const {data} = useQuery(trpc.hello.queryOptions({text:"antonio"}))
-
-
-  // console.log(data)
 
   
 
 
   return (
-    <div>
-      {JSON.stringify(data)}
-      {/* <div>hello world</div> */}
-
-    </div>  
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <Suspense fallback={<div>Loading...</div>}>
+    <Client/>
+    </Suspense>
+    </HydrationBoundary>
   );
 }
